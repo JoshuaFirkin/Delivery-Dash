@@ -8,6 +8,7 @@ public class House : MonoBehaviour
     private AudioSource rewardSound;
 
     private GameMaster gameMaster;
+    private Animation anim;
     private int tipValue = 10;
 
     void Start()
@@ -26,6 +27,7 @@ public class House : MonoBehaviour
 
         //finds the audio source
         rewardSound = GetComponent<AudioSource>();
+        anim = GetComponent<Animation>();
     }
 
     void OnCollisionEnter(Collision collision)
@@ -48,6 +50,8 @@ public class House : MonoBehaviour
                 rewardSound.pitch = Random.Range(0.5f, 1);
                 //Plays the audio
                 rewardSound.Play();
+                //Play preset animation.
+                anim.Play();
 
                 //Calls the add tips function in the game master.
                 gameMaster.AddTips(tipValue);
