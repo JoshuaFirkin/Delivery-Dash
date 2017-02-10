@@ -13,16 +13,21 @@ public class GameMaster : MonoBehaviour {
     private bool timerActive = false;
     private Text timerText;
 
+    private Animation gameOverAnim;
+
 	void Start ()
     {
         //Finds all needed assets.
         canvas = GameObject.Find("Canvas");
         tipsText = canvas.transform.FindChild("TipsTxt").GetComponent<Text>();
-        timerText = canvas.transform.FindChild("TimerTxt").GetComponent<Text>();
         if (tipsText == null)
         {
             Debug.Log("Can't Find Text.");
         }
+
+        timerText = canvas.transform.FindChild("TimerTxt").GetComponent<Text>();
+
+        gameOverAnim = canvas.transform.FindChild("GameOverPanel").GetComponent<Animation>();
 
         //Sets the tips at the start of the game to 0.
         currentTips = 0;
@@ -76,8 +81,7 @@ public class GameMaster : MonoBehaviour {
         }
         else
         {
-            //Else the timer is done.
-            Debug.Log("Done: " + timeRemaining);
+            //EndCurrentPlaythrough();
         }
 
         //Add the timer to the UI.
@@ -96,5 +100,10 @@ public class GameMaster : MonoBehaviour {
         {
             timerText.color = new Color32(255, 81, 81, 255);
         }
+    }
+
+    void EndCurrentPlaythrough()
+    {
+        gameOverAnim.Play();
     }
 }
