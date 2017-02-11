@@ -18,6 +18,16 @@ public class PlayerController : MonoBehaviour {
     //Declares the speed which the player will rotate at when mpving in a different direction.
     private float rotationSpeed = 20;
 
+    //Accessor for disableInput for security.
+    private bool disableInput = false;
+    public bool DisableInput
+    {
+        set
+        {
+            disableInput = value;
+        }
+    }
+
     //Throw distance.
     private float throwForce = 10f;
     //Stops firing after just firing.
@@ -53,33 +63,39 @@ public class PlayerController : MonoBehaviour {
 	
     void FixedUpdate()
     {
-        Drive();
+        //Bool just to stop player movement while menu is up.
+        if (!disableInput)
+        {
+            Drive();
+        }
     }
 
 	void Update ()
     {
-
-        //If Fire 1 is clicked and has not just fired.
-        if (Input.GetButton("Fire1") && !justFired)
+        if (!disableInput)
         {
-            //Fire.
-            StartCoroutine(FireFood(0));
-        }
-        //If Fire 2 is clicked and has not just fired.
-        else if (Input.GetButton("Fire2") && !justFired)
-        {
-            //Fire.
-            StartCoroutine(FireFood(1));
-        }
-        //LT BUTTON.
-        else if (Input.GetAxis("LT/RT") > 0.8f && !justFired)
-        {
-            StartCoroutine(FireFood(0));
-        }
-        //RT BUTTON.
-        else if (Input.GetAxis("LT/RT") < -0.8f && !justFired)
-        {
-            StartCoroutine(FireFood(1));
+            //If Fire 1 is clicked and has not just fired.
+            if (Input.GetButton("Fire1") && !justFired)
+            {
+                //Fire.
+                StartCoroutine(FireFood(0));
+            }
+            //If Fire 2 is clicked and has not just fired.
+            else if (Input.GetButton("Fire2") && !justFired)
+            {
+                //Fire.
+                StartCoroutine(FireFood(1));
+            }
+            //LT BUTTON.
+            else if (Input.GetAxis("LT/RT") > 0.8f && !justFired)
+            {
+                StartCoroutine(FireFood(0));
+            }
+            //RT BUTTON.
+            else if (Input.GetAxis("LT/RT") < -0.8f && !justFired)
+            {
+                StartCoroutine(FireFood(1));
+            }
         }
 	}
 

@@ -18,9 +18,12 @@ public class MenuManager : MonoBehaviour {
         Application.Quit();
     }
 
+    //Loads the controls menu.
     public void LoadControls()
     {
-        //Animation controlsAnim = 
-
+        //Finds the preset animation for the controls.
+        Animation controlsAnim = GameObject.Find("Canvas").transform.Find("ControlsPanel").GetComponent<Animation>();
+        //Plays the controls animation which heightens the alpha of the canvas group.
+        controlsAnim.Play();
     }
 }

@@ -16,7 +16,6 @@ public class GameMaster : MonoBehaviour {
     private Animation gameOverAnim;
     private Text tipsThisTimeText;
     private Text totalTipsText;
-    private string totalSavingsKey = "TotalSavings";
 
 	void Start ()
     {
@@ -110,22 +109,34 @@ public class GameMaster : MonoBehaviour {
         }
     }
 
+    //Runs when timer hits 0.
     void EndCurrentPlaythrough()
     {
+        //Finds player controller script and disables input.
+        PlayerController playerCtrl = GameObject.Find("Player").GetComponent<PlayerController>();
+        playerCtrl.DisableInput = true;
+
+        //Sets current tips to display on the menu
         tipsThisTimeText.text = ("Tips Gained: $" + currentTips);
 
+        //Gets the players current total savings from the key.
         int tempTotalSavings = PlayerPrefs.GetInt("TotalSavings");
 
+        //If the player has no previous savings.
         if (tempTotalSavings == 0)
         {
+            //Sets the total savings a default value of current tips.
             PlayerPrefs.SetInt("TotalSavings", currentTips);
         }
         else
         {
+            //Sets the total savings to current total savings + current tips.
             PlayerPrefs.SetInt("TotalSavings", tempTotalSavings + currentTips);
         }
 
+        //Display total savings.
         totalTipsText.text = ("Total Savings: $" + PlayerPrefs.GetInt("TotalSavings"));
+        //Play the game over animation.
         gameOverAnim.Play();
     }
 }
