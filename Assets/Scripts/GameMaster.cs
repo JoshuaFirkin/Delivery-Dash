@@ -7,20 +7,23 @@ public class GameMaster : MonoBehaviour {
     private GameObject canvas;
 
     private int currentTips;
-    private Text tipsText;
+    private Text currentTipsText;
 
     private float timeRemaining;
     private bool timerActive = false;
     private Text timerText;
 
     private Animation gameOverAnim;
+    private Text tipsThisTimeText;
+    private Text totalTipsText;
+    private string totalSavingsKey = "TotalSavings";
 
 	void Start ()
     {
         //Finds all needed assets.
         canvas = GameObject.Find("Canvas");
-        tipsText = canvas.transform.FindChild("TipsTxt").GetComponent<Text>();
-        if (tipsText == null)
+        currentTipsText = canvas.transform.FindChild("TipsTxt").GetComponent<Text>();
+        if (currentTipsText == null)
         {
             Debug.Log("Can't Find Text.");
         }
@@ -28,9 +31,13 @@ public class GameMaster : MonoBehaviour {
         timerText = canvas.transform.FindChild("TimerTxt").GetComponent<Text>();
 
         gameOverAnim = canvas.transform.FindChild("GameOverPanel").GetComponent<Animation>();
+        tipsThisTimeText = canvas.transform.FindChild("GameOverPanel").transform.FindChild("TipsThisTimeTxt").GetComponent<Text>();
+        totalTipsText = canvas.transform.FindChild("GameOverPanel").transform.FindChild("TotalTipsTxt").GetComponent<Text>();
 
         //Sets the tips at the start of the game to 0.
         currentTips = 0;
+
+        StartTimer(10);
 	}
 
     void Update()
@@ -49,7 +56,7 @@ public class GameMaster : MonoBehaviour {
         currentTips += tips;
         Debug.Log("Tips: " + currentTips);
         //Adds it to the UI.
-        tipsText.text = "Tips $" + currentTips;
+        currentTipsText.text = "Tips $" + currentTips;
     }
 
     //Starts the timer with how ever many seconds are passed in.
@@ -81,7 +88,8 @@ public class GameMaster : MonoBehaviour {
         }
         else
         {
-            //EndCurrentPlaythrough();
+            StopTimer();
+            EndCurrentPlaythrough();
         }
 
         //Add the timer to the UI.
@@ -104,6 +112,20 @@ public class GameMaster : MonoBehaviour {
 
     void EndCurrentPlaythrough()
     {
+        tipsThisTimeText.text = ("Tips Gained: $" + currentTips);
+
+        int tempTotalSavings = PlayerPrefs.GetInt("TotalSavings");
+
+        if (tempTotalSavings == 0)
+        {
+            PlayerPrefs.SetInt("TotalSavings", currentTips);
+        }
+        else
+        {
+            PlayerPrefs.SetInt("TotalSavings", tempTotalSavings + currentTips);
+        }
+
+        totalTipsText.text = ("Total Savings: $" + PlayerPrefs.GetInt("TotalSavings"));
         gameOverAnim.Play();
     }
 }
