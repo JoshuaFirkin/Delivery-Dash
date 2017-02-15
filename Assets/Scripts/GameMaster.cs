@@ -36,8 +36,9 @@ public class GameMaster : MonoBehaviour {
         //Sets the tips at the start of the game to 0.
         currentTips = 0;
 
-        StartTimer(10);
-	}
+        StartTimer(30);
+        PlayerPrefs.DeleteKey("TotalSavings");
+    }
 
     void Update()
     {
