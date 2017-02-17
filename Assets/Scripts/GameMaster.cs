@@ -37,7 +37,6 @@ public class GameMaster : MonoBehaviour {
         currentTips = 0;
 
         StartTimer(30);
-        PlayerPrefs.DeleteKey("TotalSavings");
     }
 
     void Update()
