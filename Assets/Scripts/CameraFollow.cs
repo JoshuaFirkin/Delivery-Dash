@@ -23,7 +23,7 @@ public class CameraFollow : MonoBehaviour {
         //Sets target position Y to be the cameras Y value.
         targetPos.y = transform.position.y;
         //Sets target position Z as the player position Z - focus range.
-        targetPos.z = playerTransform.position.z - 15;
+        targetPos.z = playerTransform.position.z - 16;
 
         //Lerps the cameras transform.position towards the players X and Z coordinates.
         transform.position = new Vector3(Mathf.Lerp(transform.position.x, targetPos.x, followSpeed * Time.deltaTime), targetPos.y, Mathf.Lerp(transform.position.z, targetPos.z, followSpeed * Time.deltaTime));

@@ -17,6 +17,9 @@ public class GameMaster : MonoBehaviour {
     private Text tipsThisTimeText;
     private Text totalTipsText;
 
+    private House[] houses = new House[8];
+    private int activeHouses = 4;
+
 	void Start ()
     {
         //Finds all needed assets.
@@ -28,10 +31,11 @@ public class GameMaster : MonoBehaviour {
         }
 
         timerText = canvas.transform.FindChild("TimerTxt").GetComponent<Text>();
-
         gameOverAnim = canvas.transform.FindChild("GameOverPanel").GetComponent<Animation>();
         tipsThisTimeText = canvas.transform.FindChild("GameOverPanel").transform.FindChild("TipsThisTimeTxt").GetComponent<Text>();
         totalTipsText = canvas.transform.FindChild("GameOverPanel").transform.FindChild("TotalTipsTxt").GetComponent<Text>();
+
+        ActivateHouses();
 
         //Sets the tips at the start of the game to 0.
         currentTips = 0;
@@ -45,6 +49,31 @@ public class GameMaster : MonoBehaviour {
         if (timerActive)
         {
             Countdown();
+        }
+    }
+
+    void ActivateHouses()
+    {
+        GameObject[] housesGO = GameObject.FindGameObjectsWithTag("House");
+        for (int i = 0; i < housesGO.Length; i++)
+        {
+            houses[i] = housesGO[i].GetComponent<House>();
+        }
+
+        int randomHouse = 0;
+        for (int i = 0; i < activeHouses; i++)
+        {
+            randomHouse = Random.Range(0, houses.Length);
+            if (houses[randomHouse].GetActiveState())
+            {
+                i--;
+                continue;
+            }
+            else
+            {
+                houses[randomHouse].SetActive();
+                continue;
+            }
         }
     }
 
@@ -83,7 +112,6 @@ public class GameMaster : MonoBehaviour {
         {
             //take away Time.deltaTime.
             timeRemaining -= Time.deltaTime;
-            Debug.Log(timeRemaining);
         }
         else
         {

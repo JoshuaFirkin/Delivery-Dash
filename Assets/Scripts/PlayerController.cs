@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour
+{
     //Which layer the Raycast will hit (Currently set to ground layer).
     public LayerMask groundCheckLayer = 8;
     //Prefab of food game object.
@@ -37,7 +38,7 @@ public class PlayerController : MonoBehaviour {
     //Anchor point for both ground check and the throw vector.
     private Transform anchorPoint;
 
-	void Start ()
+    void Start()
     {
         //Defines rigidbody.
         rb = GetComponent<Rigidbody>();
@@ -60,7 +61,8 @@ public class PlayerController : MonoBehaviour {
         //Defines anchor.
         anchorPoint = transform.Find("Anchor");
     }
-	
+
+
     void FixedUpdate()
     {
         //Bool just to stop player movement while menu is up.
@@ -70,7 +72,8 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-	void Update ()
+
+    void Update()
     {
         if (!disableInput)
         {
@@ -97,7 +100,16 @@ public class PlayerController : MonoBehaviour {
                 StartCoroutine(FireFood(1));
             }
         }
-	}
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "pickup")
+        {
+            Destroy(other.gameObject);
+        }
+
+    }
 
     //Moves player.
     void Drive()
@@ -117,6 +129,7 @@ public class PlayerController : MonoBehaviour {
         //moves position.
         rb.AddForce(movement, ForceMode.Force);
     }
+
 
     //Checks if player is on ground.
     bool GroundCheck()
@@ -181,12 +194,12 @@ public class PlayerController : MonoBehaviour {
 
         //Adds force to food.
         foodRB.AddForce((throwVector * throwForce) + (movement * 0.035f), ForceMode.Impulse);
-        
+
         //Adds a cool little spin to the pizza box.
         foodRB.AddTorque
             (
             //Spin is little even though numbers are big.
-            new Vector3(0,Random.Range(900,1000),0),
+            new Vector3(0, Random.Range(900, 1000), 0),
             ForceMode.Impulse
             );
 

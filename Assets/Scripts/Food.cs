@@ -16,13 +16,16 @@ public class Food : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        //Play the audio if it hits any environment assets.
-        if (!hitAudio.isPlaying && collision.gameObject.tag == "Environment")
+        if (collision.gameObject.tag == "Environment" || collision.gameObject.tag == "House")
         {
-            //Change to a random pitch.
-            hitAudio.pitch = Random.Range(0.5f, 1);
-            //Play the audio.
-            hitAudio.Play();
+            //Play the audio if it hits any environment assets.
+            if (!hitAudio.isPlaying)
+            {
+                //Change to a random pitch.
+                hitAudio.pitch = Random.Range(0.5f, 1);
+                //Play the audio.
+                hitAudio.Play();
+            }
         }
     }
 }
