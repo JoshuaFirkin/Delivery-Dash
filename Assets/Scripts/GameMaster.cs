@@ -8,38 +8,38 @@ public class GameMaster : MonoBehaviour {
 
     private int currentTips;
     private Text currentTipsText;
-
-    private float timeRemaining;
-    private bool timerActive = false;
-    private Text timerText;
-
+    private Text bonusText;
+    private Animation bonusAnim;
     private Animation gameOverAnim;
     private Text tipsThisTimeText;
     private Text totalTipsText;
+    private Text timerText;
 
+    private float timeRemaining;
+    private float timeElapsed = 0;
+    private bool timerActive = false;
     private House[] houses = new House[8];
     private int activeHouses = 4;
+    private int remainingHouses;
 
 	void Start ()
     {
         //Finds all needed assets.
         canvas = GameObject.Find("Canvas");
-        currentTipsText = canvas.transform.FindChild("TipsTxt").GetComponent<Text>();
-        if (currentTipsText == null)
-        {
-            Debug.Log("Can't Find Text.");
-        }
-
-        timerText = canvas.transform.FindChild("TimerTxt").GetComponent<Text>();
-        gameOverAnim = canvas.transform.FindChild("GameOverPanel").GetComponent<Animation>();
-        tipsThisTimeText = canvas.transform.FindChild("GameOverPanel").transform.FindChild("TipsThisTimeTxt").GetComponent<Text>();
-        totalTipsText = canvas.transform.FindChild("GameOverPanel").transform.FindChild("TotalTipsTxt").GetComponent<Text>();
+        currentTipsText = canvas.transform.Find("TipsTxt").GetComponent<Text>();
+        bonusText = canvas.transform.Find("BonusTxt").GetComponent<Text>();
+        bonusAnim = canvas.transform.Find("BonusTxt").GetComponent<Animation>();
+        timerText = canvas.transform.Find("TimerTxt").GetComponent<Text>();
+        gameOverAnim = canvas.transform.Find("GameOverPanel").GetComponent<Animation>();
+        tipsThisTimeText = canvas.transform.Find("GameOverPanel").transform.Find("TipsThisTimeTxt").GetComponent<Text>();
+        totalTipsText = canvas.transform.Find("GameOverPanel").transform.Find("TotalTipsTxt").GetComponent<Text>();
 
         ActivateHouses();
+        remainingHouses = activeHouses;
 
         //Sets the tips at the start of the game to 0.
         currentTips = 0;
-
+        //30 seconds on timer.
         StartTimer(30);
     }
 
@@ -88,14 +88,64 @@ public class GameMaster : MonoBehaviour {
         }
     }
 
+    //Takes one house from remaining houses and checks how many houses are left.
+    public void MinusOneHouse()
+    {
+        //Takes a house away.
+        remainingHouses -= 1;
+
+        //if there are no houses left active.
+        if (remainingHouses <= 0)
+        {
+            //Stop the timer and end the playthrough.
+            StopTimer();
+            EndCurrentPlaythrough();
+        }
+    }
+
     //Takes the value parameter from the house.
     public void AddTips(int tips)
     {
+        //Declares a time bonus.
+        int timeBonus = 0;
+
+        //If the delivery is done in less than 30 seconds.
+        if (timeElapsed <= 30)
+        {
+            timeBonus = 20;
+        }
+        //Less than 60 seconds.
+        else if (timeElapsed <= 60)
+        {
+            timeBonus = 10;
+        }
+        //Less than 1:30.
+        else if (timeElapsed <= 90)
+        {
+            timeBonus = 3;
+        }
+        //Any more than that, no bonus.
+        else
+        {
+            timeBonus = 0;
+        }
+
+        //NOTE: THE BONUSES ABOVE ARE SUBJECT TO TWEAKING.
+
         //Adds tips to current tips.
-        currentTips += tips;
+        currentTips += tips + timeBonus;
         Debug.Log("Tips: " + currentTips);
+
         //Adds it to the UI.
         currentTipsText.text = "Tips $" + currentTips;
+
+        if (timeBonus != 0)
+        {
+            //Bonus text displays bonus.
+            bonusText.text = "Speed Bonus +" + timeBonus + "!";
+            //Plays a cool animation.
+            bonusAnim.Play();
+        }
     }
 
     //Starts the timer with how ever many seconds are passed in.
@@ -123,6 +173,7 @@ public class GameMaster : MonoBehaviour {
         {
             //take away Time.deltaTime.
             timeRemaining -= Time.deltaTime;
+            timeElapsed += Time.deltaTime;
         }
         else
         {
@@ -146,6 +197,12 @@ public class GameMaster : MonoBehaviour {
         {
             timerText.color = new Color32(255, 81, 81, 255);
         }
+    }
+
+
+    public void AddTime(int seconds)
+    {
+        timeRemaining += seconds;
     }
 
     //Runs when timer hits 0.

@@ -10,11 +10,11 @@ public class House : MonoBehaviour
     private GameMaster gameMaster;
     private Animation anim;
     private int tipValue = 10;
+    private int timeValue = 5;
 
     private Transform pointer;
     private Animation pointerAnim;
     private Material pointerMat;
-    private int timeToDeliver = 10;
 
     void Start()
     {
@@ -79,23 +79,33 @@ public class House : MonoBehaviour
             //If it is less that the width of the door.
             if (distanceToDoor0 <= 2f || distanceToDoor1 <= 2f)
             {
-                //Turns the house inactive.
-                activeHouse = false;
+                ReceiveFood();
                 //Destroys the food.
                 Destroy(collision.gameObject);
-                //Makes a random audio pitch.
-                rewardSound.pitch = Random.Range(0.5f, 1);
-                //Plays the audio
-                rewardSound.Play();
-                //Play preset animation.
-                anim.Play();
-                //Checks if the house is active.
-                CheckActive();
-                //Calls the add tips function in the game master.
-                gameMaster.AddTips(tipValue);
             }
         }
     }
+
+    void ReceiveFood()
+    {
+        //Turns the house inactive.
+        activeHouse = false;
+        //Makes a random audio pitch.
+        rewardSound.pitch = Random.Range(0.5f, 1);
+        //Plays the audio
+        rewardSound.Play();
+        //Play preset animation.
+        anim.Play();
+        //Checks if the house is active.
+        CheckActive();
+        //Calls the add tips function in the game master.
+        gameMaster.AddTips(tipValue);
+        //Adds more time for the player to collect monies.
+        gameMaster.AddTime(timeValue);
+        //Takes one house away from remaining houses.
+        gameMaster.MinusOneHouse();
+    }
+
 
     //Get and set for house activity.
     public bool GetActiveState()
