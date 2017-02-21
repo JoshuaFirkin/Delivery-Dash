@@ -34,6 +34,7 @@ public class House : MonoBehaviour
         rewardSound = GetComponent<AudioSource>();
         anim = GetComponent<Animation>();
 
+        //Finds anything to do with the pointer.
         pointer = transform.Find("Pointer");
         pointerAnim = pointer.gameObject.GetComponent<Animation>();
         CheckActive();
@@ -42,19 +43,26 @@ public class House : MonoBehaviour
 
     void CheckActive()
     {
+        //If the house is active.
         if (activeHouse)
         {
+            //If the pointer is not already floating.
             if (!pointerAnim.isPlaying)
             {
+                //Play the floating animation. 
                 pointerAnim.Play();
             }
         }
+        //If the house is not active.
         else
         {
+            //If the pointer is floating.
             if (pointerAnim.isPlaying)
             {
+                //Stop the floating animation.
                 pointerAnim.Stop();
             }
+            //Disable the mesh renderer for performance and so the player cannot see it.
             pointer.GetComponent<MeshRenderer>().enabled = false;
         }
     }
@@ -89,6 +97,7 @@ public class House : MonoBehaviour
         }
     }
 
+    //Get and set for house activity.
     public bool GetActiveState()
     {
         return activeHouse;

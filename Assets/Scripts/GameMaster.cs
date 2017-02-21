@@ -52,25 +52,36 @@ public class GameMaster : MonoBehaviour {
         }
     }
 
+    //Chooses which houses are active.
     void ActivateHouses()
     {
+        //Declares an array of house gameobject which it finds with the tag "House".
         GameObject[] housesGO = GameObject.FindGameObjectsWithTag("House");
+        //Goes through the previous array and gets all of the house scripts from those game objects,
+        //adding them to another array of house scripts.
         for (int i = 0; i < housesGO.Length; i++)
         {
             houses[i] = housesGO[i].GetComponent<House>();
         }
 
+        //Declares an int which will choose a random house.
         int randomHouse = 0;
+        //Loops from 0 to however many houses are meant to be active in the scene.
         for (int i = 0; i < activeHouses; i++)
         {
+            //Chooses a random int from 0 to length of houses.
             randomHouse = Random.Range(0, houses.Length);
+            //Checks if chosen house is already active.
             if (houses[randomHouse].GetActiveState())
             {
+                //If the house is already active, re-loop without adding i.
                 i--;
                 continue;
             }
+            //If the house is not already active.
             else
             {
+                //make it active and re-loop.
                 houses[randomHouse].SetActive();
                 continue;
             }
