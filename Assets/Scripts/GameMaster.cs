@@ -14,6 +14,8 @@ public class GameMaster : MonoBehaviour {
     private Text tipsThisTimeText;
     private Text totalTipsText;
     private Text timerText;
+    private Text housesRemainingTxt;
+    private Animation remainingAnim;
 
     private float timeRemaining;
     private float timeElapsed = 0;
@@ -30,12 +32,15 @@ public class GameMaster : MonoBehaviour {
         bonusText = canvas.transform.Find("BonusTxt").GetComponent<Text>();
         bonusAnim = canvas.transform.Find("BonusTxt").GetComponent<Animation>();
         timerText = canvas.transform.Find("TimerTxt").GetComponent<Text>();
+        housesRemainingTxt = canvas.transform.Find("RemainingTxt").GetComponent<Text>();
+        remainingAnim = housesRemainingTxt.gameObject.GetComponent<Animation>();
         gameOverAnim = canvas.transform.Find("GameOverPanel").GetComponent<Animation>();
         tipsThisTimeText = canvas.transform.Find("GameOverPanel").transform.Find("TipsThisTimeTxt").GetComponent<Text>();
         totalTipsText = canvas.transform.Find("GameOverPanel").transform.Find("TotalTipsTxt").GetComponent<Text>();
 
         ActivateHouses();
         remainingHouses = activeHouses;
+        housesRemainingTxt.text = (remainingHouses + " Remaining");
 
         //Sets the tips at the start of the game to 0.
         currentTips = 0;
@@ -93,7 +98,9 @@ public class GameMaster : MonoBehaviour {
     {
         //Takes a house away.
         remainingHouses -= 1;
-
+        //Informs the player on how many houses are left.
+        housesRemainingTxt.text = (remainingHouses + " Remaining");
+        remainingAnim.Play();
         //if there are no houses left active.
         if (remainingHouses <= 0)
         {

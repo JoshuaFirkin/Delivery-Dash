@@ -31,8 +31,10 @@ public class PlayerController : MonoBehaviour
 
     //Throw distance.
     private float throwForce = 10f;
-    //Stops firing after just firing.
-    private bool justFired = false;
+    //Rate of fire.
+    private float fireRate = 5f;
+    //Checks when last shot was taken.
+    private float lastShot = 0;
     //Fire Points, one on each side.
     private Transform[] firePoints = new Transform[2];
     //Anchor point for both ground check and the throw vector.
@@ -78,26 +80,34 @@ public class PlayerController : MonoBehaviour
         if (!disableInput)
         {
             //If Fire 1 is clicked and has not just fired.
-            if (Input.GetButton("Fire1") && !justFired)
+            if (Input.GetButton("Fire1") && Time.time - lastShot > 1 / fireRate)
             {
+                lastShot = Time.time;
                 //Fire.
-                StartCoroutine(FireFood(0));
+                //StartCoroutine(FireFood(0));
+                FireFood(0);
             }
             //If Fire 2 is clicked and has not just fired.
-            else if (Input.GetButton("Fire2") && !justFired)
+            else if (Input.GetButton("Fire2") && Time.time - lastShot > 1 / fireRate)
             {
+                lastShot = Time.time;
                 //Fire.
-                StartCoroutine(FireFood(1));
+                //StartCoroutine(FireFood(1));
+                FireFood(1);
             }
             //LT BUTTON.
-            else if (Input.GetAxis("LT/RT") > 0.8f && !justFired)
+            else if (Input.GetAxis("LT/RT") > 0.8f && Time.time - lastShot > 1 / fireRate)
             {
-                StartCoroutine(FireFood(0));
+                lastShot = Time.time;
+                //StartCoroutine(FireFood(0));
+                FireFood(0);
             }
             //RT BUTTON.
-            else if (Input.GetAxis("LT/RT") < -0.8f && !justFired)
+            else if (Input.GetAxis("LT/RT") < -0.8f && Time.time - lastShot > 1 / fireRate)
             {
-                StartCoroutine(FireFood(1));
+                lastShot = Time.time;
+                //StartCoroutine(FireFood(1));
+                FireFood(1);
             }
         }
     }
@@ -174,12 +184,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //Fires food and takes a parameter (0 or 1)
-    IEnumerator FireFood(short fireSide)
+    void FireFood(int fireSide)
     {
-        //Set fire to true so that player cant re-fire
-        justFired = true;
-
         AudioSource throwSound = firePoints[fireSide].GetComponent<AudioSource>();
         throwSound.pitch = Random.Range(0.5f, 1);
         throwSound.Play();
@@ -202,12 +208,42 @@ public class PlayerController : MonoBehaviour
             new Vector3(0, Random.Range(900, 1000), 0),
             ForceMode.Impulse
             );
-
-        //Waits for 0.2 seconds and resets justFired.
-        yield return new WaitForSeconds(0.15f);
-        //Reset justFired.
-        justFired = false;
     }
+
+    ////Fires food and takes a parameter (0 or 1)
+    //IEnumerator FireFood(short fireSide)
+    //{
+    //    //Set fire to true so that player cant re-fire
+    //    justFired = true;
+
+    //    AudioSource throwSound = firePoints[fireSide].GetComponent<AudioSource>();
+    //    throwSound.pitch = Random.Range(0.5f, 1);
+    //    throwSound.Play();
+
+    //    //Instantiates food transform.
+    //    Transform food = Instantiate(foodPrefab, firePoints[fireSide].position, transform.rotation) as Transform;
+    //    //Delacres the throw vector to be the point between the food and the anchor.
+    //    Vector3 throwVector = food.position - anchorPoint.position;
+
+    //    //Gets the rigidbody of the food just instantiated.
+    //    Rigidbody foodRB = food.GetComponent<Rigidbody>();
+
+    //    //Adds force to food.
+    //    foodRB.AddForce((throwVector * throwForce) + (movement * 0.035f), ForceMode.Impulse);
+
+    //    //Adds a cool little spin to the pizza box.
+    //    foodRB.AddTorque
+    //        (
+    //        //Spin is little even though numbers are big.
+    //        new Vector3(0, Random.Range(900, 1000), 0),
+    //        ForceMode.Impulse
+    //        );
+
+    //    //Waits for 0.2 seconds and resets justFired.
+    //    yield return new WaitForSeconds(0.15f);
+    //    //Reset justFired.
+    //    justFired = false;
+    //}
 
 
 }
