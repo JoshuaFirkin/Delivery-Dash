@@ -1,6 +1,56 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public class PlayerUpgrades
+{
+    private float speedModifier = 0;
+    public float SpeedModifier
+    {
+        set
+        {
+            speedModifier = value;
+        }
+        get
+        {
+            return speedModifier;
+        }
+    }
+
+    private float brakingModifier = 0;
+    public float BrakingModifier
+    {
+        set
+        {
+            brakingModifier = value;
+        }
+        get
+        {
+            return brakingModifier;
+        }
+    }
+
+    private float deliveryModifier = 0;
+    public float DeliveryModifier
+    {
+        set
+        {
+            deliveryModifier = value;
+        }
+        get
+        {
+            return deliveryModifier;
+        }
+    }
+
+
+    PlayerUpgrades()
+    {
+
+    }
+}
+
+
+
 public class PlayerController : MonoBehaviour
 {
     //Which layer the Raycast will hit (Currently set to ground layer).
