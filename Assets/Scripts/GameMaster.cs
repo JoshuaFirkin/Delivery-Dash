@@ -20,8 +20,8 @@ public class GameMaster : MonoBehaviour {
     private float timeRemaining;
     private float timeElapsed = 0;
     private bool timerActive = false;
-    private House[] houses = new House[8];
-    private int activeHouses = 4;
+    private House[] houses = new House[100];//Number Edited
+    private int activeHouses = 40;//Number Edited
     private int remainingHouses;
 
 	void Start ()
@@ -70,7 +70,7 @@ public class GameMaster : MonoBehaviour {
         }
 
         //Declares an int which will choose a random house.
-        int randomHouse = 0;
+        int randomHouse = 5;//Number Edited
         //Loops from 0 to however many houses are meant to be active in the scene.
         for (int i = 0; i < activeHouses; i++)
         {
