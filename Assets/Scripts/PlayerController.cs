@@ -217,21 +217,24 @@ public class PlayerController : MonoBehaviour
     }
 
 
+    //Applies vehicle upgrades to the vehicle.
     void SetUpgrades()
     {
-        int[] bonuses = new int[2];
+        //Declares 3 floats to act as upgrades.
+        float[] bonuses = new float[3];
+
+        //Sets the 3 integers to the values of the saved bonuses.
         bonuses[0] = PlayerPrefs.GetInt("SpeedBonus");
-        bonuses[1] = PlayerPrefs.GetInt("BrakingBonus");
+        bonuses[1] = PlayerPrefs.GetFloat("BrakingBonus");
+        bonuses[2] = PlayerPrefs.GetFloat("DeliveryBonus");
 
-        float deliveryBonus = PlayerPrefs.GetFloat("DeliveryBonus");
-        Debug.Log("Delivery Bonus = " + deliveryBonus);
-
-        Debug.Log("Speed: " + moveSpeed + " FireRate: " + fireRate);
-
+        //Applies the bonuses to the aspects of the vehicles.
         moveSpeed = bonuses[0];
-        fireRate = deliveryBonus;
+        rb.drag = bonuses[1];
+        fireRate = bonuses[2];
 
-        Debug.Log("New Speed: " + moveSpeed + "New FireRate: " + fireRate);
+        //Debug for testing.
+        Debug.Log("New Speed: " + moveSpeed + "New FireRate: " + fireRate + " Drag: " + rb.drag);
     }
 
 
