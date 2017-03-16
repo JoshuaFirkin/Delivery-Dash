@@ -1,55 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerUpgrades
-{
-    private float speedModifier = 0;
-    public float SpeedModifier
-    {
-        set
-        {
-            speedModifier = value;
-        }
-        get
-        {
-            return speedModifier;
-        }
-    }
-
-    private float brakingModifier = 0;
-    public float BrakingModifier
-    {
-        set
-        {
-            brakingModifier = value;
-        }
-        get
-        {
-            return brakingModifier;
-        }
-    }
-
-    private float deliveryModifier = 0;
-    public float DeliveryModifier
-    {
-        set
-        {
-            deliveryModifier = value;
-        }
-        get
-        {
-            return deliveryModifier;
-        }
-    }
-
-
-    PlayerUpgrades()
-    {
-
-    }
-}
-
-
 
 public class PlayerController : MonoBehaviour
 {
@@ -65,7 +16,7 @@ public class PlayerController : MonoBehaviour
     //Defines movement vector.
     private Vector3 movement;
     //Declares the players move speed.
-    private float moveSpeed = 1600;
+    private float moveSpeed = 1200;
     //Declares the speed which the player will rotate at when mpving in a different direction.
     private float rotationSpeed = 20;
 
@@ -82,7 +33,7 @@ public class PlayerController : MonoBehaviour
     //Throw distance.
     private float throwForce = 10f;
     //Rate of fire.
-    private float fireRate = 5f;
+    private float fireRate = 1f;
     //Checks when last shot was taken.
     private float lastShot = 0;
     //Fire Points, one on each side.
@@ -110,8 +61,11 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Fire Point not found");
         }
+
         //Defines anchor.
         anchorPoint = transform.Find("Anchor");
+
+        SetUpgrades();
     }
 
 
@@ -161,6 +115,8 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+
 
     public void OnTriggerEnter(Collider other)
     {
@@ -260,40 +216,23 @@ public class PlayerController : MonoBehaviour
             );
     }
 
-    ////Fires food and takes a parameter (0 or 1)
-    //IEnumerator FireFood(short fireSide)
-    //{
-    //    //Set fire to true so that player cant re-fire
-    //    justFired = true;
 
-    //    AudioSource throwSound = firePoints[fireSide].GetComponent<AudioSource>();
-    //    throwSound.pitch = Random.Range(0.5f, 1);
-    //    throwSound.Play();
+    void SetUpgrades()
+    {
+        int[] bonuses = new int[2];
+        bonuses[0] = PlayerPrefs.GetInt("SpeedBonus");
+        bonuses[1] = PlayerPrefs.GetInt("BrakingBonus");
 
-    //    //Instantiates food transform.
-    //    Transform food = Instantiate(foodPrefab, firePoints[fireSide].position, transform.rotation) as Transform;
-    //    //Delacres the throw vector to be the point between the food and the anchor.
-    //    Vector3 throwVector = food.position - anchorPoint.position;
+        float deliveryBonus = PlayerPrefs.GetFloat("DeliveryBonus");
+        Debug.Log("Delivery Bonus = " + deliveryBonus);
 
-    //    //Gets the rigidbody of the food just instantiated.
-    //    Rigidbody foodRB = food.GetComponent<Rigidbody>();
+        Debug.Log("Speed: " + moveSpeed + " FireRate: " + fireRate);
 
-    //    //Adds force to food.
-    //    foodRB.AddForce((throwVector * throwForce) + (movement * 0.035f), ForceMode.Impulse);
+        moveSpeed = bonuses[0];
+        fireRate = deliveryBonus;
 
-    //    //Adds a cool little spin to the pizza box.
-    //    foodRB.AddTorque
-    //        (
-    //        //Spin is little even though numbers are big.
-    //        new Vector3(0, Random.Range(900, 1000), 0),
-    //        ForceMode.Impulse
-    //        );
-
-    //    //Waits for 0.2 seconds and resets justFired.
-    //    yield return new WaitForSeconds(0.15f);
-    //    //Reset justFired.
-    //    justFired = false;
-    //}
+        Debug.Log("New Speed: " + moveSpeed + "New FireRate: " + fireRate);
+    }
 
 
 }
