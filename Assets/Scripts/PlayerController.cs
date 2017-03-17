@@ -224,14 +224,39 @@ public class PlayerController : MonoBehaviour
         float[] bonuses = new float[3];
 
         //Sets the 3 integers to the values of the saved bonuses.
-        bonuses[0] = PlayerPrefs.GetInt("SpeedBonus");
+        bonuses[0] = PlayerPrefs.GetFloat("SpeedBonus");
         bonuses[1] = PlayerPrefs.GetFloat("BrakingBonus");
         bonuses[2] = PlayerPrefs.GetFloat("DeliveryBonus");
 
-        //Applies the bonuses to the aspects of the vehicles.
-        moveSpeed = bonuses[0];
-        rb.drag = bonuses[1];
-        fireRate = bonuses[2];
+
+        //If the values of the bonuses are 0, set them to their default values.
+        if (moveSpeed == 0)
+        {
+            moveSpeed = 1200;
+        }
+        //If not, set them to their upgraded values.
+        else
+        {
+            moveSpeed = bonuses[0];
+        }
+
+        if (rb.drag == 0)
+        {
+            rb.drag = 1.2f;
+        }
+        else
+        {
+            rb.drag = bonuses[1];
+        }
+
+        if (fireRate == 0)
+        {
+            fireRate = 1.5f;
+        }
+        else
+        {
+            fireRate = bonuses[2];
+        }
 
         //Debug for testing.
         Debug.Log("New Speed: " + moveSpeed + "New FireRate: " + fireRate + " Drag: " + rb.drag);
