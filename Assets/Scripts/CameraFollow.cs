@@ -21,7 +21,7 @@ public class CameraFollow : MonoBehaviour {
         //Sets target position X as the player position X.
         Vector3 targetPos = playerTransform.position;
         //Sets target position Y to be the cameras Y value.
-        targetPos.y = transform.position.y;
+        targetPos.y = playerTransform.position.y + 15.42f;
         //Sets target position Z as the player position Z - focus range.
         targetPos.z = playerTransform.position.z - 16;
 

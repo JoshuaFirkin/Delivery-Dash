@@ -24,7 +24,8 @@ public class UpgradeManager : MonoBehaviour {
     private GameObject canvas;
     //Text showing savings.
     private Text savingsText;
-
+    
+    //Bars on the screen.
     private Image[] bars = new Image[3];
 
 
