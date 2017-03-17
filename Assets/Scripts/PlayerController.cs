@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
 public class PlayerController : MonoBehaviour
 {
     //Which layer the Raycast will hit (Currently set to ground layer).
@@ -15,7 +16,7 @@ public class PlayerController : MonoBehaviour
     //Defines movement vector.
     private Vector3 movement;
     //Declares the players move speed.
-    private float moveSpeed = 1600;
+    private float moveSpeed = 1200;
     //Declares the speed which the player will rotate at when mpving in a different direction.
     private float rotationSpeed = 20;
 
@@ -32,7 +33,7 @@ public class PlayerController : MonoBehaviour
     //Throw distance.
     private float throwForce = 10f;
     //Rate of fire.
-    private float fireRate = 5f;
+    private float fireRate = 1f;
     //Checks when last shot was taken.
     private float lastShot = 0;
     //Fire Points, one on each side.
@@ -60,8 +61,11 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Fire Point not found");
         }
+
         //Defines anchor.
         anchorPoint = transform.Find("Anchor");
+
+        SetUpgrades();
     }
 
 
@@ -111,6 +115,8 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+
 
     public void OnTriggerEnter(Collider other)
     {
@@ -210,40 +216,26 @@ public class PlayerController : MonoBehaviour
             );
     }
 
-    ////Fires food and takes a parameter (0 or 1)
-    //IEnumerator FireFood(short fireSide)
-    //{
-    //    //Set fire to true so that player cant re-fire
-    //    justFired = true;
 
-    //    AudioSource throwSound = firePoints[fireSide].GetComponent<AudioSource>();
-    //    throwSound.pitch = Random.Range(0.5f, 1);
-    //    throwSound.Play();
+    //Applies vehicle upgrades to the vehicle.
+    void SetUpgrades()
+    {
+        //Declares 3 floats to act as upgrades.
+        float[] bonuses = new float[3];
 
-    //    //Instantiates food transform.
-    //    Transform food = Instantiate(foodPrefab, firePoints[fireSide].position, transform.rotation) as Transform;
-    //    //Delacres the throw vector to be the point between the food and the anchor.
-    //    Vector3 throwVector = food.position - anchorPoint.position;
+        //Sets the 3 integers to the values of the saved bonuses.
+        bonuses[0] = PlayerPrefs.GetInt("SpeedBonus");
+        bonuses[1] = PlayerPrefs.GetFloat("BrakingBonus");
+        bonuses[2] = PlayerPrefs.GetFloat("DeliveryBonus");
 
-    //    //Gets the rigidbody of the food just instantiated.
-    //    Rigidbody foodRB = food.GetComponent<Rigidbody>();
+        //Applies the bonuses to the aspects of the vehicles.
+        moveSpeed = bonuses[0];
+        rb.drag = bonuses[1];
+        fireRate = bonuses[2];
 
-    //    //Adds force to food.
-    //    foodRB.AddForce((throwVector * throwForce) + (movement * 0.035f), ForceMode.Impulse);
-
-    //    //Adds a cool little spin to the pizza box.
-    //    foodRB.AddTorque
-    //        (
-    //        //Spin is little even though numbers are big.
-    //        new Vector3(0, Random.Range(900, 1000), 0),
-    //        ForceMode.Impulse
-    //        );
-
-    //    //Waits for 0.2 seconds and resets justFired.
-    //    yield return new WaitForSeconds(0.15f);
-    //    //Reset justFired.
-    //    justFired = false;
-    //}
+        //Debug for testing.
+        Debug.Log("New Speed: " + moveSpeed + "New FireRate: " + fireRate + " Drag: " + rb.drag);
+    }
 
 
 }
