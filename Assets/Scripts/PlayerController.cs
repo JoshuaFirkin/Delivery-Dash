@@ -116,12 +116,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-
+    //Enters the colliders trigger zone.
     public void OnTriggerEnter(Collider other)
     {
+        //If it is a pickup.
         if (other.tag == "pickup")
         {
+            //Destroy the gameo object.
             Destroy(other.gameObject);
         }
 
@@ -192,8 +193,11 @@ public class PlayerController : MonoBehaviour
 
     void FireFood(int fireSide)
     {
+        //Finds the audio source connected to the fire point.
         AudioSource throwSound = firePoints[fireSide].GetComponent<AudioSource>();
+        //Randomises the pitch.
         throwSound.pitch = Random.Range(0.5f, 1);
+        //Plays the sound.
         throwSound.Play();
 
         //Instantiates food transform.
@@ -223,7 +227,7 @@ public class PlayerController : MonoBehaviour
         //Declares 3 floats to act as upgrades.
         float[] bonuses = new float[3];
 
-        //Sets the 3 integers to the values of the saved bonuses.
+        //Sets the 3 floats to the values of the saved bonuses.
         bonuses[0] = PlayerPrefs.GetFloat("SpeedBonus");
         bonuses[1] = PlayerPrefs.GetFloat("BrakingBonus");
         bonuses[2] = PlayerPrefs.GetFloat("DeliveryBonus");

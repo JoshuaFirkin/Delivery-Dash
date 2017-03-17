@@ -212,7 +212,7 @@ public class UpgradeManager : MonoBehaviour {
     //Saves the upgrade levels of each bonus.
     void SaveUpgradeLevels()
     {
-        //Saves an int for each upgrade level in the array.
+        //Saves a float for each upgrade level in the array.
         PlayerPrefs.SetInt("SpeedLevel", upgradeLevels[0]);
         PlayerPrefs.SetInt("BrakingLevel", upgradeLevels[1]);
         PlayerPrefs.SetInt("DeliveryLevel", upgradeLevels[2]);
