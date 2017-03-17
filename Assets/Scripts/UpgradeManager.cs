@@ -27,6 +27,8 @@ public class UpgradeManager : MonoBehaviour {
     
     //Bars on the screen.
     private Image[] bars = new Image[3];
+    //Text underneath the bars.
+    private Text[] priceTexts = new Text[3];
 
 
     void Start()
@@ -46,6 +48,11 @@ public class UpgradeManager : MonoBehaviour {
         bars[1] = canvas.transform.Find("BrakeBar").transform.Find("BrakeBar").GetComponent<Image>();
         bars[2] = canvas.transform.Find("DeliveryBar").transform.Find("DeliveryBar").GetComponent<Image>();
 
+        //Finds all of the text to display the prices of the upgrades in them.
+        priceTexts[0] = canvas.transform.Find("PriceTxt(Speed)").GetComponent<Text>();
+        priceTexts[1] = canvas.transform.Find("PriceTxt(Braking)").GetComponent<Text>();
+        priceTexts[2] = canvas.transform.Find("PriceTxt(Delivery)").GetComponent<Text>();
+
         //Gets the upgrade levels from the hard drive.
         upgradeLevels[0] = PlayerPrefs.GetInt("SpeedLevel");
         upgradeLevels[1] = PlayerPrefs.GetInt("BrakingLevel");
@@ -53,6 +60,8 @@ public class UpgradeManager : MonoBehaviour {
 
         //Loads the progress bars.
         LoadBars();
+        //Load the price text underneath the progress bars.
+        LoadPrices();
     }
 
 
@@ -122,6 +131,8 @@ public class UpgradeManager : MonoBehaviour {
         SaveUpgradeLevels();
         //Loads the progress bars.
         LoadBars();
+        //Loads the text of the upgrade prices.
+        LoadPrices();
     }
 
 
@@ -149,6 +160,27 @@ public class UpgradeManager : MonoBehaviour {
                 case 3:
                     bars[i].fillAmount = 1.0f;
                     break;
+            }
+        }
+    }
+
+    //Shows the player the price of each upgrade.
+    void LoadPrices()
+    {
+        //Loops through all of the texts.
+        for (int i = 0; i < priceTexts.Length; i++)
+        {
+            //If the upgrade level is already maxed out.
+            if (upgradeLevels[i] > 2)
+            {
+                //Tell the player that they cannot upgrade further.
+                priceTexts[i].text = "Maxed!";
+            }
+            //If not maxed out.
+            else
+            {
+                //Tell the player what the next upgrade price is.
+                priceTexts[i].text = "$" + prices[upgradeLevels[i]];
             }
         }
     }
