@@ -20,8 +20,8 @@ public class GameMaster : MonoBehaviour {
     private float timeRemaining;
     private float timeElapsed = 0;
     private bool timerActive = false;
-    private House[] houses = new House[8];
-    private int activeHouses = 4;
+    private House[] houses = new House[98]; //Number has to be exactly how many houses are on scene.
+    private int activeHouses = 30;
     private int remainingHouses;
 
 	void Start ()
@@ -38,14 +38,17 @@ public class GameMaster : MonoBehaviour {
         tipsThisTimeText = canvas.transform.Find("GameOverPanel").transform.Find("TipsThisTimeTxt").GetComponent<Text>();
         totalTipsText = canvas.transform.Find("GameOverPanel").transform.Find("TotalTipsTxt").GetComponent<Text>();
 
+        //Activate a number of random houses.
         ActivateHouses();
+        //Set the remaining house to however many houses there are.
         remainingHouses = activeHouses;
+        //Inform the player.
         housesRemainingTxt.text = (remainingHouses + " Remaining");
 
         //Sets the tips at the start of the game to 0.
         currentTips = 0;
         //30 seconds on timer.
-        StartTimer(30);
+        StartTimer(300);
     }
 
     void Update()
@@ -76,6 +79,7 @@ public class GameMaster : MonoBehaviour {
         {
             //Chooses a random int from 0 to length of houses.
             randomHouse = Random.Range(0, houses.Length);
+            Debug.Log("House: " + randomHouse);
             //Checks if chosen house is already active.
             if (houses[randomHouse].GetActiveState())
             {
@@ -184,6 +188,7 @@ public class GameMaster : MonoBehaviour {
         }
         else
         {
+            //Stop the timer and end the current game (Go to the menu).
             StopTimer();
             EndCurrentPlaythrough();
         }
@@ -207,6 +212,7 @@ public class GameMaster : MonoBehaviour {
     }
 
 
+    //Adds an amount to remaining time.
     public void AddTime(int seconds)
     {
         timeRemaining += seconds;
