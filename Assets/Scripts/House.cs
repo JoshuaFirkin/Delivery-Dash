@@ -10,7 +10,7 @@ public class House : MonoBehaviour
     private GameMaster gameMaster;
     private Animation anim;
     private int tipValue = 10;
-    private int timeValue = 5;
+    private int timeValue = 20;
 
     private Transform pointer;
     private Animation pointerAnim;
@@ -30,7 +30,7 @@ public class House : MonoBehaviour
         door[0] = transform.Find("Door[0]");
         door[1] = transform.Find("Door[1]");
 
-        //finds the audio source
+        //Finds the audio source
         rewardSound = GetComponent<AudioSource>();
         anim = GetComponent<Animation>();
 

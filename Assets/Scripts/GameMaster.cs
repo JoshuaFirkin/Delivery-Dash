@@ -59,7 +59,7 @@ public class GameMaster : MonoBehaviour {
         //Sets the tips at the start of the game to 0.
         currentTips = 0;
         //30 seconds on timer.
-        StartTimer(300);
+        StartTimer(150);
     }
 
     void Update()
