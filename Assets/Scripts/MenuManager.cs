@@ -10,6 +10,8 @@ public class MenuManager : MonoBehaviour {
     //Load a level with the passed in integer.
     public void LoadLevel(int levelToLoad)
     {
+        //Resets timescale.
+        Time.timeScale = 1;
         //Loads the passed in level in single mode (Meaning there will be no other scenes in the background).
         SceneManager.LoadScene(levelToLoad, LoadSceneMode.Single);
     }

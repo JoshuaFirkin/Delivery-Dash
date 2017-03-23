@@ -4,6 +4,7 @@ using System.Collections;
 
 public class GameMaster : MonoBehaviour {
 
+    private PlayerController playerCtrl;
     private GameObject canvas;
 
     private int currentTips;
@@ -16,6 +17,10 @@ public class GameMaster : MonoBehaviour {
     private Text timerText;
     private Text housesRemainingTxt;
     private Animation remainingAnim;
+    private CanvasGroup pauseGroup;
+    private Text pauseTipsTxt;
+    private Text pauseTotalSavingsTxt;
+    private bool gamePaused = false;
 
     private float timeRemaining;
     private float timeElapsed = 0;
@@ -26,6 +31,9 @@ public class GameMaster : MonoBehaviour {
 
 	void Start ()
     {
+        //Finds player controller script and disables input.
+        playerCtrl = GameObject.Find("Player").GetComponent<PlayerController>();
+
         //Finds all needed assets.
         canvas = GameObject.Find("Canvas");
         currentTipsText = canvas.transform.Find("TipsTxt").GetComponent<Text>();
@@ -35,6 +43,9 @@ public class GameMaster : MonoBehaviour {
         housesRemainingTxt = canvas.transform.Find("RemainingTxt").GetComponent<Text>();
         remainingAnim = housesRemainingTxt.gameObject.GetComponent<Animation>();
         gameOverAnim = canvas.transform.Find("GameOverPanel").GetComponent<Animation>();
+        pauseGroup = canvas.transform.Find("PausePanel").GetComponent<CanvasGroup>();
+        pauseTipsTxt = pauseGroup.transform.Find("PauseTipsTxt").GetComponent<Text>();
+        pauseTotalSavingsTxt = pauseGroup.transform.Find("TotalTipsTxt").GetComponent<Text>();
         tipsThisTimeText = canvas.transform.Find("GameOverPanel").transform.Find("TipsThisTimeTxt").GetComponent<Text>();
         totalTipsText = canvas.transform.Find("GameOverPanel").transform.Find("TotalTipsTxt").GetComponent<Text>();
 
@@ -221,8 +232,6 @@ public class GameMaster : MonoBehaviour {
     //Runs when timer hits 0.
     void EndCurrentPlaythrough()
     {
-        //Finds player controller script and disables input.
-        PlayerController playerCtrl = GameObject.Find("Player").GetComponent<PlayerController>();
         playerCtrl.DisableInput = true;
 
         //Sets current tips to display on the menu
@@ -247,5 +256,43 @@ public class GameMaster : MonoBehaviour {
         totalTipsText.text = ("Total Savings: $" + PlayerPrefs.GetInt("TotalSavings"));
         //Play the game over animation.
         gameOverAnim.Play();
+    }
+
+
+    //Pauses or unpauses the game.
+    public void PauseGame()
+    {
+        //If the game is already paused.
+        if (gamePaused)
+        {
+            //Enable player input.
+            playerCtrl.DisableInput = false;
+            //Sets the state of the game to "unpaused".
+            gamePaused = false;
+            //Makes the canvas group non-interactable.
+            pauseGroup.interactable = false;
+            //Makes the pause menu invisible.
+            pauseGroup.alpha = 0;
+
+            Time.timeScale = 1;
+        }
+        else
+        {
+            //Disables player movement.
+            playerCtrl.DisableInput = true;
+
+            //Sets the text of the current tips and the total savings.
+            pauseTipsTxt.text = ("Tips Gained: $" + currentTips);
+            pauseTotalSavingsTxt.text = ("Total Savings: $" + PlayerPrefs.GetInt("TotalSavings"));
+
+            //Makes game state "paused".
+            gamePaused = true;
+            //Makes the pause menu interactable.
+            pauseGroup.interactable = true;
+            //Makes the pause menu appear.
+            pauseGroup.alpha = 1;
+
+            Time.timeScale = 0;
+        }
     }
 }

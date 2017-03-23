@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     //Prefab of food game object.
     public Transform foodPrefab;
 
+    //Declares a game master.
+    private GameMaster gameMaster;
     //Declares rigidbody.
     private Rigidbody rb;
     //Delares an array of trail renderers (2).
@@ -19,6 +21,10 @@ public class PlayerController : MonoBehaviour
     private float moveSpeed = 1200;
     //Declares the speed which the player will rotate at when mpving in a different direction.
     private float rotationSpeed = 20;
+    //Declares an audio source for the motor.
+    private AudioSource motorAudio;
+
+    private AudioSource[] crashAudio = new AudioSource[2];
 
     //Accessor for disableInput for security.
     private bool disableInput = false;
@@ -43,6 +49,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        gameMaster = GameObject.Find("GameMaster").GetComponent<GameMaster>();
+
         //Defines rigidbody.
         rb = GetComponent<Rigidbody>();
         //Defines both trail renderers.
@@ -65,6 +73,14 @@ public class PlayerController : MonoBehaviour
         //Defines anchor.
         anchorPoint = transform.Find("Anchor");
 
+        //Declares audio source.
+        motorAudio = GetComponent<AudioSource>();
+
+        //Finds the two crash audios (Minor and Major).
+        crashAudio[0] = transform.Find("CrashAudio[0]").GetComponent<AudioSource>();
+        crashAudio[1] = transform.Find("CrashAudio[1]").GetComponent<AudioSource>();
+
+        //Sets the upgrades to the players upgrades.
         SetUpgrades();
     }
 
@@ -81,6 +97,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        //If input is not disabled.
         if (!disableInput)
         {
             //If Fire 1 is clicked and has not just fired.
@@ -114,6 +131,13 @@ public class PlayerController : MonoBehaviour
                 FireFood(1);
             }
         }
+
+        //If the pause button is pressed.
+        if (Input.GetButtonDown("Pause"))
+        {
+            //Either pause or unpause depending on current state.
+            gameMaster.PauseGame();
+        }
     }
 
     //Enters the colliders trigger zone.
@@ -125,8 +149,29 @@ public class PlayerController : MonoBehaviour
             //Destroy the gameo object.
             Destroy(other.gameObject);
         }
-
     }
+
+    //Actually hits the collider.
+    public void OnCollisionEnter(Collision collision)
+    {
+        //If the collision isnt with the food or the ground.
+        if (collision.gameObject.tag != "Food" && collision.gameObject.tag != "Ground")
+        {
+            //If the player is travelling faster than a certain speed.
+            if (Vector3.SqrMagnitude(rb.velocity) > 50)
+            {
+                //Play the major crash.
+                crashAudio[1].Play();
+            }
+            //If the player is travelling at less than the previous speed but still faster than a tap.
+            else if (Vector3.SqrMagnitude(rb.velocity) > 10)
+            {
+                //Play the minor crash.
+                crashAudio[0].Play();
+            }
+        }
+    }
+
 
     //Moves player.
     void Drive()
@@ -143,8 +188,11 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), rotationSpeed * Time.deltaTime);
         }
 
-        //moves position.
+        //Moves position.
         rb.AddForce(movement, ForceMode.Force);
+
+        //Changes the pitch of the audio depending on the speed of the player.
+        motorAudio.pitch = Vector3.SqrMagnitude(rb.velocity) * 0.002f;
     }
 
 
