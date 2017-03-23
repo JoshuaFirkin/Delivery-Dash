@@ -21,6 +21,7 @@ public class GameMaster : MonoBehaviour {
     private Text pauseTipsTxt;
     private Text pauseTotalSavingsTxt;
     private bool gamePaused = false;
+    private bool gameOver = false;
 
     private float timeRemaining;
     private float timeElapsed = 0;
@@ -59,7 +60,7 @@ public class GameMaster : MonoBehaviour {
         //Sets the tips at the start of the game to 0.
         currentTips = 0;
         //30 seconds on timer.
-        StartTimer(150);
+        StartTimer(160);
     }
 
     void Update()
@@ -232,7 +233,11 @@ public class GameMaster : MonoBehaviour {
     //Runs when timer hits 0.
     void EndCurrentPlaythrough()
     {
+        //Disables player movement.
         playerCtrl.DisableInput = true;
+
+        //Doesnt allow the player to pause game.
+        gameOver = true;
 
         //Sets current tips to display on the menu
         tipsThisTimeText.text = ("Tips Gained: $" + currentTips);
@@ -262,15 +267,22 @@ public class GameMaster : MonoBehaviour {
     //Pauses or unpauses the game.
     public void PauseGame()
     {
+        //If the game over screen is already up.
+        if (gameOver)
+        {
+            //Don't show pause menu.
+            return;
+        }
+
         //If the game is already paused.
         if (gamePaused)
         {
-            //Enable player input.
-            playerCtrl.DisableInput = false;
             //Sets the state of the game to "unpaused".
             gamePaused = false;
             //Makes the canvas group non-interactable.
             pauseGroup.interactable = false;
+            //Does not allow the mouse to be able to click it.
+            pauseGroup.blocksRaycasts = false;
             //Makes the pause menu invisible.
             pauseGroup.alpha = 0;
 
@@ -278,9 +290,6 @@ public class GameMaster : MonoBehaviour {
         }
         else
         {
-            //Disables player movement.
-            playerCtrl.DisableInput = true;
-
             //Sets the text of the current tips and the total savings.
             pauseTipsTxt.text = ("Tips Gained: $" + currentTips);
             pauseTotalSavingsTxt.text = ("Total Savings: $" + PlayerPrefs.GetInt("TotalSavings"));
@@ -289,9 +298,11 @@ public class GameMaster : MonoBehaviour {
             gamePaused = true;
             //Makes the pause menu interactable.
             pauseGroup.interactable = true;
+            //Allows the mouse to be able to click it.
+            pauseGroup.blocksRaycasts = true;
             //Makes the pause menu appear.
             pauseGroup.alpha = 1;
-
+            //Stop time!
             Time.timeScale = 0;
         }
     }
