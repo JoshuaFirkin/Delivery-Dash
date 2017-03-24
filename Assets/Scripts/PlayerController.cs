@@ -282,7 +282,7 @@ public class PlayerController : MonoBehaviour
 
 
         //If the values of the bonuses are 0, set them to their default values.
-        if (moveSpeed < 1200)
+        if (bonuses[0] < 1200)
         {
             moveSpeed = 1200;
         }
@@ -292,7 +292,7 @@ public class PlayerController : MonoBehaviour
             moveSpeed = bonuses[0];
         }
 
-        if (rb.drag < 1.2f)
+        if (bonuses[1] < 1.2f)
         {
             rb.drag = 1.2f;
         }
@@ -301,7 +301,7 @@ public class PlayerController : MonoBehaviour
             rb.drag = bonuses[1];
         }
 
-        if (fireRate < 1.5f)
+        if (bonuses[2] < 1.5f)
         {
             fireRate = 1.5f;
         }

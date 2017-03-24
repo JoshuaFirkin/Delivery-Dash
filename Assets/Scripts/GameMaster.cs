@@ -59,6 +59,10 @@ public class GameMaster : MonoBehaviour {
 
         //Sets the tips at the start of the game to 0.
         currentTips = 0;
+
+        //Hide cursor.
+        ActivateCursor(false);
+
         //30 seconds on timer.
         StartTimer(160);
     }
@@ -236,6 +240,9 @@ public class GameMaster : MonoBehaviour {
         //Disables player movement.
         playerCtrl.DisableInput = true;
 
+        //Show cursor.
+        ActivateCursor(true);
+
         //Doesnt allow the player to pause game.
         gameOver = true;
 
@@ -277,6 +284,9 @@ public class GameMaster : MonoBehaviour {
         //If the game is already paused.
         if (gamePaused)
         {
+            //Hide cursor.
+            ActivateCursor(false);
+
             //Sets the state of the game to "unpaused".
             gamePaused = false;
             //Makes the canvas group non-interactable.
@@ -293,6 +303,9 @@ public class GameMaster : MonoBehaviour {
             //Sets the text of the current tips and the total savings.
             pauseTipsTxt.text = ("Tips Gained: $" + currentTips);
             pauseTotalSavingsTxt.text = ("Total Savings: $" + PlayerPrefs.GetInt("TotalSavings"));
+            
+            //Show cursor.
+            ActivateCursor(true);
 
             //Makes game state "paused".
             gamePaused = true;
@@ -304,6 +317,28 @@ public class GameMaster : MonoBehaviour {
             pauseGroup.alpha = 1;
             //Stop time!
             Time.timeScale = 0;
+        }
+    }
+
+    //Shows opr hides cursor.
+    void ActivateCursor(bool active)
+    {
+        //Switches on what the function requires.
+        switch (active)
+        {
+            case true:
+                //Turns cursor visible.
+                Cursor.visible = true;
+                //Locks the cursor to the center of the screen.
+                Cursor.lockState = CursorLockMode.None;
+                break;
+
+            case false:
+                //Turns the cursor invisible.
+                Cursor.visible = false;
+                //Unlocks the cursor so it can be moved.
+                Cursor.lockState = CursorLockMode.Locked;
+                break;
         }
     }
 }
