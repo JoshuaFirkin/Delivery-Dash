@@ -176,20 +176,18 @@ public class PlayerController : MonoBehaviour
     //Moves player.
     void Drive()
     {
-        //Defines a movement vector.
+        //Creates a new vector 3 based on the player's input.
         movement = new Vector3(Input.GetAxis("Horizontal") * moveSpeed * Time.deltaTime, 0, Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime);
-        //Normalizes vector so that the player can not move faster diagonally.
+        //Normalised the vector so the player always moves at the same speed.
         Vector3.Normalize(movement);
 
-        //Checks if there is no movement input
         if (movement != Vector3.zero)
         {
-            //rotates towards movement direction.
+            //Rotate towards the input axis over time.
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), rotationSpeed * Time.deltaTime);
+            //Always addforce to the back of the tuk-tuk to move forward.
+            rb.AddForce(transform.forward * moveSpeed * Time.deltaTime);
         }
-
-        //Moves position.
-        rb.AddForce(movement, ForceMode.Force);
 
         //Changes the pitch of the audio depending on the speed of the player.
         motorAudio.pitch = Vector3.SqrMagnitude(rb.velocity) * 0.002f;

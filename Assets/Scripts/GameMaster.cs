@@ -2,6 +2,8 @@
 using UnityEngine.UI;
 using System.Collections;
 
+
+// TODO: Make this class a singleton.
 public class GameMaster : MonoBehaviour {
 
     private PlayerController playerCtrl;

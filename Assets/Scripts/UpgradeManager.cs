@@ -37,7 +37,7 @@ public class UpgradeManager : MonoBehaviour {
         canvas = GameObject.Find("Canvas");
 
         //Finds the savings text.
-        savingsText = canvas.transform.FindChild("SavingsTxt").GetComponent<Text>();
+        savingsText = canvas.transform.Find("SavingsTxt").GetComponent<Text>();
 
         //Sets savings text to the players current savings.
         savingsText.text = "$" + PlayerPrefs.GetInt("TotalSavings");
